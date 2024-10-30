@@ -26,7 +26,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         # tanquem browser
         # comentar la propera línia si volem veure el resultat de l'execució al navegador
-        #cls.selenium.quit()
+        cls.selenium.quit()
         super().tearDownClass()
  
     def test_login(self):
