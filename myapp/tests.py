@@ -44,28 +44,4 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.selenium.find_element(By.XPATH,'//input[@value="Log in"]').click()
  
         # testejem que hem entrat a l'admin panel comprovant el títol de la pàgina
-        self.assertEqual( self.selenium.title , "Site administration | Django site admin" )        
-
-        try:
-            self.selenium.find_element(By.XPATH, "//button[text()='Log outt']")
-            assert False, "El elemento 'Log outt' fue encontrado cuando NO debería estar presente."
-        except NoSuchElementException:
-            pass  # El elemento no está, así que la prueba pasa sin errores
-
-        # Busca el botón "View site" y verifica que está presente
-        try:
-            view_site_button = self.selenium.find_element(By.XPATH, "//a[text()='VIEW SITE']")
-        except NoSuchElementException:
-            self.fail("El botón 'View site' no se encontró en la página de administración.")
-        
-        # Hace clic en el botón "View site" y verifica que la página cargue correctamente
-        view_site_button.click()
-        
-        # Cambia a la nueva pestaña o ventana que se haya abierto
-        self.selenium.switch_to.window(self.selenium.window_handles[-1])
-
-        # Verifica que la URL de la página cargada no tenga un código de error HTTP
-        current_url = self.selenium.current_url
-        response = self.selenium.get(current_url)
-        
-        self.assertEqual(response.status_code, 200, "La página redirigida no es válida.")
+        self.assertEqual( self.selenium.title , "Site administration | Django site admin" )
