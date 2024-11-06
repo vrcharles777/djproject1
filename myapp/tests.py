@@ -47,6 +47,12 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.assertEqual( self.selenium.title , "Site administration | Django site admin" )
 
         try:
+            self.selenium.find_element(By.XPATH, "//button[text()='Log outt']")
+            assert False, "El elemento 'Log outt' fue encontrado cuando NO debería estar presente."
+        except NoSuchElementException:
+            pass  # El elemento no está, así que la prueba pasa sin errores
+            
+        try:
             # Verificamos si el botón "VIEW SITE" existe
             view_site_button = self.selenium.find_element(By.XPATH, "//a[text()='View site']")
             view_site_button.click()  # Si existe, accedemos al sitio
