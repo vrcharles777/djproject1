@@ -1,3 +1,5 @@
+import os
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.firefox.options import Options
@@ -5,12 +7,15 @@ from selenium.webdriver.common.by import By
 from django.contrib.auth.models import User
 from selenium.common.exceptions import NoSuchElementException
 
+
 class MySeleniumTests(StaticLiveServerTestCase):
+    host = '192.168.15.222'  # Configura la IP en la que quieres que el servidor de pruebas escuche
     # carregar una BD de test
     #fixtures = ['testdb.json',]
  
     @classmethod
     def setUpClass(cls):
+        os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = '192.168.15.222:8000'
         super().setUpClass()
         opts = Options()
         cls.selenium = WebDriver(options=opts)
@@ -31,7 +36,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
  
     def test_login(self):
         # anem directament a la pàgina d'accés a l'admin panel
-        self.selenium.get('%s%s' % (self.live_server_url, '/admin/login/'))
+        self.selenium.get('http://192.168.15.222:8000/admin/login/')
  
         # comprovem que el títol de la pàgina és el que esperem
         self.assertEqual( self.selenium.title , "Log in | Django site admin" )
@@ -45,3 +50,10 @@ class MySeleniumTests(StaticLiveServerTestCase):
  
         # testejem que hem entrat a l'admin panel comprovant el títol de la pàgina
         self.assertEqual( self.selenium.title , "Site administration | Django site admin" )
+        
+        try:
+            # Verificamos si el botón "VIEW SITE" existe
+            view_site_button = self.selenium.find_element(By.XPATH, "//a[text()='View site']")
+            view_site_button.click()  # Si existe, accedemos al sitio
+        except NoSuchElementException:
+            assert False, "El botón 'VIEW SITE' no se encontró, pero debería estar presente."
